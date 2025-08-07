@@ -1,16 +1,21 @@
 import "../css/MovieCard.css";
+import "../css/Favourites.css";
+import type { Movie } from "../Types/movie";
+import { useMovieContext } from "../contexts/useMovieContext";
 
 interface MovieCardProps {
-  movie: {
-    title: string;
-    release_date: string;
-    poster_path: string;
-  };
+  movie: Movie
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
-  const onFavouriteClick = () => {
-    alert("clicked");
+  const { isFavourite, addToFavourites, removeFromFavourites } =
+    useMovieContext();
+  const favourite = isFavourite(movie.id); // for button make it red love
+
+  const onFavouriteClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (favourite) removeFromFavourites(movie.id);
+    else addToFavourites(movie);
   };
 
   // Movie Card Section
@@ -22,7 +27,10 @@ export default function MovieCard({ movie }: MovieCardProps) {
           alt={movie.title}
         />
         <div className="movie-overlay">
-          <button className="favourite-btn" onClick={onFavouriteClick}>
+          <button
+            className={`favourite-btn ${favourite ? "active" : ""}`}
+            onClick={onFavouriteClick}
+          >
             ♥
           </button>
         </div>

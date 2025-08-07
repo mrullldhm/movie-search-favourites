@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import "../css/Home.css";
 import { getPopularMovies, searchMovies } from "../services/api";
+import type { Movie } from "../Types/movie";
 
 export default function Home() {
   // useState
   const [searchQuery, setSearchQuery] = useState(""); // Search Bar
-  const [movies, setMovies] = useState([]); // API
+  const [movies, setMovies] = useState<Movie[]>([]); // API
   const [error, setError] = useState<string | null>(null); // Error
   const [loading, setLoading] = useState(true); // Loading
 
@@ -29,19 +30,19 @@ export default function Home() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault(); // prevent refresh when submit
-    if (!searchQuery.trim()) return 
-    if (loading) return
+    if (!searchQuery.trim()) return;
+    if (loading) return;
 
-    setLoading(true) 
+    setLoading(true);
     try {
-      const searchResults = await searchMovies(searchQuery)
-      setMovies(searchResults)
-      setError(null)
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
     } catch (err) {
-      console.log(err)
-        setError("Failed to search movies...");
-    }finally {
-      setLoading(false)
+      console.log(err);
+      setError("Failed to search movies...");
+    } finally {
+      setLoading(false);
     }
 
     setSearchQuery("");
@@ -70,8 +71,8 @@ export default function Home() {
         <div className="loading">Loading...</div>
       ) : (
         <div className="movies-grid">
-          {movies.map((movie, index) => (
-            <MovieCard movie={movie} key={index} />
+          {movies.map((movie) => (
+            <MovieCard movie={movie} key={movie.id} />
           ))}
         </div>
       )}
